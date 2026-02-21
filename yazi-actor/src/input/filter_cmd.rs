@@ -4,6 +4,8 @@ use yazi_macro::{act, succ};
 use yazi_parser::ArrowOpt;
 use yazi_parser::input::FilterCmdOpt;
 use yazi_parser::mgr::{CopyOpt, CreateOpt, PasteOpt, RenameOpt, ToggleOpt, YankOpt};
+use yazi_parser::notify::{PushLevel, PushOpt};
+use yazi_proxy::NotifyProxy;
 use yazi_shared::data::Data;
 use yazi_widgets::input::parser::InsertOpt;
 
@@ -25,6 +27,10 @@ impl Actor for FilterCmd {
 			"up" => act!(insert, cx.input, InsertOpt { append: false }),
 			"down" if is_filter => act!(mgr:arrow, cx, ArrowOpt::from(1isize)),
 			"down" => succ!(),
+			"up5" if is_filter => act!(mgr:arrow, cx, ArrowOpt::from(-5isize)),
+			"up5" => succ!(),
+			"down5" if is_filter => act!(mgr:arrow, cx, ArrowOpt::from(5isize)),
+			"down5" => succ!(),
 
 			// Everything below is filter-only (no-op otherwise)
 			_ if !is_filter => succ!(),
@@ -41,11 +47,20 @@ impl Actor for FilterCmd {
 				empty: Default::default(),
 				cursor: Default::default(),
 			}),
-			"copy_path" => act!(mgr:copy, cx, CopyOpt {
-				r#type: "path".into(),
-				separator: Default::default(),
-				hovered: false,
-			}),
+			"copy_path" => {
+				let result = act!(mgr:copy, cx, CopyOpt {
+					r#type: "path".into(),
+					separator: Default::default(),
+					hovered: false,
+				});
+				NotifyProxy::push(PushOpt {
+					title:   "Copy".to_owned(),
+					content: "Path copied to clipboard".to_owned(),
+					level:   PushLevel::Info,
+					timeout: std::time::Duration::from_secs(3),
+				});
+				result
+			}
 			_ => succ!(),
 		}
 	}

@@ -238,12 +238,16 @@ keymap = [
 	{ on = "<C-[>",   run = "escape",         desc = "Back to normal mode, or cancel input" },
 
 	# Mode
-	{ on = "i", run = "filter_cmd up",                   desc = "Move up in filter mode, or enter insert mode" },
-	{ on = "I", run = [ "move first-char", "insert" ],   desc = "Move to the BOL, and enter insert mode" },
-	{ on = "a", run = "insert --append",                 desc = "Enter append mode" },
-	{ on = "A", run = [ "move eol", "insert --append" ], desc = "Move to the EOL, and enter append mode" },
-	{ on = "k", run = "filter_cmd down",                 desc = "Move down in filter mode" },
+	{ on = "a", run = "insert",                          desc = "Enter insert mode (cursor left)" },
+	{ on = ";", run = "insert --append",                 desc = "Enter insert mode (cursor right)" },
+	{ on = "A", run = [ "move eol", "insert --append" ], desc = "Move to the EOL, and enter insert mode" },
 	{ on = "v", run = "visual",                          desc = "Enter visual mode" },
+
+	# Navigation (ijkl: i=up, k=down)
+	{ on = "i", run = "filter_cmd up",    desc = "Move up in filter mode, or enter insert mode" },
+	{ on = "k", run = "filter_cmd down",  desc = "Move down in filter mode" },
+	{ on = "I", run = "filter_cmd up5",   desc = "Move 5 up in filter mode" },
+	{ on = "K", run = "filter_cmd down5", desc = "Move 5 down in filter mode" },
 
 	# Filter mgr commands (normal mode only, filter mode only)
 	{ on = "q", run = "filter_cmd quit",      desc = "Quit" },
@@ -294,6 +298,8 @@ keymap = [
 	{ on = "<Delete>",    run = "backspace --under", desc = "Delete the character under the cursor" },
 	{ on = "<C-h>",       run = "backspace",         desc = "Delete the character before the cursor" },
 	{ on = "<C-d>",       run = "backspace --under", desc = "Delete the character under the cursor" },
+	{ on = "/",           run = "backspace",         desc = "Delete the character before the cursor" },
+	{ on = ".",           run = "backspace --under", desc = "Delete the character under the cursor" },
 
 	# Kill
 	{ on = "<C-u>",         run = "kill bol",      desc = "Kill backwards to the BOL" },
