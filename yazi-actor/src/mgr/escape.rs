@@ -15,11 +15,14 @@ impl Actor for Escape {
 
 	fn act(cx: &mut Ctx, opt: Self::Options) -> Result<Data> {
 		if opt.is_empty() {
-			_ = act!(mgr:escape_find, cx)? != false
+			let did_something = act!(mgr:escape_find, cx)? != false
 				|| act!(mgr:escape_visual, cx)? != false
 				|| act!(mgr:escape_filter, cx)? != false
 				|| act!(mgr:escape_select, cx)? != false
 				|| act!(mgr:escape_search, cx)? != false;
+			if !did_something {
+				return act!(mgr:leave, cx);
+			}
 			succ!();
 		}
 
