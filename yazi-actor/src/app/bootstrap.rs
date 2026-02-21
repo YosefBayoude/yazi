@@ -26,6 +26,7 @@ impl Actor for Bootstrap {
 			}
 		}
 
+		act!(mgr:filter, cx)?;
 		succ!();
 	}
 }
