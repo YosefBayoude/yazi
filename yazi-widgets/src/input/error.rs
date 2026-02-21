@@ -7,6 +7,7 @@ pub enum InputError {
 	Typed(String),
 	Completed(String, Id),
 	Canceled(String),
+	Submitted(String),
 }
 
 impl Display for InputError {
@@ -15,6 +16,7 @@ impl Display for InputError {
 			Self::Typed(text) => write!(f, "Typed error: {text}"),
 			Self::Completed(text, _) => write!(f, "Completed error: {text}"),
 			Self::Canceled(text) => write!(f, "Canceled error: {text}"),
+			Self::Submitted(text) => write!(f, "Submitted error: {text}"),
 		}
 	}
 }
