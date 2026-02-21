@@ -191,13 +191,13 @@ rename_offset = [ 0, 1, 50, 3 ]
 
 # filter
 filter_title  = "Filter:"
-filter_origin = "top-center"
-filter_offset = [ 0, 2, 50, 3 ]
+filter_origin = "bottom-left"
+filter_offset = [ 0, 0, 32000, 3 ]
 
 # find
 find_title  = [ "Find next:", "Find previous:" ]
-find_origin = "top-center"
-find_offset = [ 0, 2, 50, 3 ]
+find_origin = "bottom-left"
+find_offset = [ 0, 0, 32000, 3 ]
 
 # search
 search_title  = "Search via {n}:"

@@ -1,5 +1,6 @@
 use ratatui::{buffer::Buffer, layout::{Margin, Rect}, text::Line, widgets::{Block, BorderType, Widget}};
 use yazi_config::THEME;
+use yazi_config::popup::InputKind;
 use yazi_core::Core;
 
 pub(crate) struct Input<'a> {
@@ -11,9 +12,16 @@ impl<'a> Input<'a> {
 }
 
 impl Widget for Input<'_> {
-	fn render(self, _: Rect, buf: &mut Buffer) {
+	fn render(self, area: Rect, buf: &mut Buffer) {
 		let input = &self.core.input;
-		let area = self.core.mgr.area(input.position);
+
+		let area = match input.kind {
+			InputKind::Find | InputKind::Filter => {
+				// Use the reserved 3-row area above the 1-row status bar
+				Rect { x: area.x, y: area.height.saturating_sub(4), width: area.width, height: 3 }
+			}
+			_ => self.core.mgr.area(input.position),
+		};
 
 		yazi_widgets::Clear.render(area, buf);
 

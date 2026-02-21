@@ -1,5 +1,7 @@
 use crossterm::cursor::SetCursorStyle;
 use ratatui::layout::{Position, Rect};
+use yazi_config::popup::InputKind;
+use yazi_emulator::Dimension;
 use yazi_shared::Layer;
 
 use crate::{cmp::Cmp, confirm::Confirm, help::Help, input::Input, mgr::Mgr, notify::Notify, pick::Pick, tab::{Folder, Tab}, tasks::Tasks, which::Which};
@@ -33,11 +35,17 @@ impl Core {
 
 	pub fn cursor(&self) -> Option<(Position, SetCursorStyle)> {
 		if self.input.visible {
-			let Rect { x, y, .. } = self.mgr.area(self.input.position);
-			return Some((
-				Position { x: x + 1 + self.input.cursor(), y: y + 1 },
-				self.input.cursor_shape(),
-			));
+			let (x, y) = match self.input.kind {
+				InputKind::Find | InputKind::Filter => {
+					let rows = Dimension::available().rows;
+					(1 + self.input.cursor(), rows.saturating_sub(3))
+				}
+				_ => {
+					let Rect { x, y, .. } = self.mgr.area(self.input.position);
+					(x + 1 + self.input.cursor(), y + 1)
+				}
+			};
+			return Some((Position { x, y }, self.input.cursor_shape()));
 		}
 		if let Some((x, y)) = self.help.cursor() {
 			return Some((Position { x, y }, self.help.cursor_shape()));

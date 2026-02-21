@@ -17,6 +17,7 @@ function Root:layout()
 			ui.Constraint.Length(1),
 			ui.Constraint.Length(Tabs.height()),
 			ui.Constraint.Fill(1),
+			ui.Constraint.Length(3),
 			ui.Constraint.Length(1),
 		})
 		:split(self._area)
@@ -27,7 +28,7 @@ function Root:build()
 		Header:new(self._chunks[1], cx.active),
 		Tabs:new(self._chunks[2]),
 		Tab:new(self._chunks[3], cx.active),
-		Status:new(self._chunks[4], cx.active),
+		Status:new(self._chunks[5], cx.active),
 		Modal:new(self._area),
 	}
 end
