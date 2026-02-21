@@ -11,13 +11,26 @@ pub struct Filter {
 
 impl Filter {
 	pub fn new(s: &str, case: FilterCase) -> Result<Self> {
+		Self::create(s, case, false)
+	}
+
+	pub fn new_fuzzy(s: &str, case: FilterCase) -> Result<Self> {
+		Self::create(s, case, true)
+	}
+
+	fn create(s: &str, case: FilterCase, fuzzy: bool) -> Result<Self> {
+		let pattern = if fuzzy {
+			s.chars().map(|c| regex::escape(&c.to_string())).collect::<Vec<_>>().join(".*?")
+		} else {
+			s.to_owned()
+		};
 		let regex = match case {
 			FilterCase::Smart => {
 				let uppercase = s.chars().any(|c| c.is_uppercase());
-				RegexBuilder::new(s).case_insensitive(!uppercase).build()?
+				RegexBuilder::new(&pattern).case_insensitive(!uppercase).build()?
 			}
-			FilterCase::Sensitive => Regex::new(s)?,
-			FilterCase::Insensitive => RegexBuilder::new(s).case_insensitive(true).build()?,
+			FilterCase::Sensitive => Regex::new(&pattern)?,
+			FilterCase::Insensitive => RegexBuilder::new(&pattern).case_insensitive(true).build()?,
 		};
 		Ok(Self { raw: s.to_owned(), regex })
 	}
