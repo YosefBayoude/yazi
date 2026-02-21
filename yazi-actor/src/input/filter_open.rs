@@ -3,7 +3,7 @@ use yazi_config::popup::InputKind;
 use yazi_macro::{act, succ};
 use yazi_parser::{VoidOpt, input::CloseOpt};
 use yazi_shared::data::Data;
-use yazi_widgets::input::{InputError, parser::InsertOpt};
+use yazi_widgets::input::InputError;
 
 use crate::{Actor, Ctx};
 
@@ -31,7 +31,7 @@ impl Actor for FilterOpen {
 				snap.cursor = 0;
 				snap.offset = 0;
 				cx.input.flush_value();
-				let _ = act!(insert, cx.input, InsertOpt { append: false });
+				// let _ = act!(insert, cx.input, InsertOpt { append: false });
 
 				result
 			} else {

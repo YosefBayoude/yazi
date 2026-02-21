@@ -238,10 +238,11 @@ keymap = [
 	{ on = "<C-[>",   run = "escape",         desc = "Back to normal mode, or cancel input" },
 
 	# Mode
-	{ on = "i", run = "insert",                          desc = "Enter insert mode" },
+	{ on = "i", run = "filter_cmd up",                   desc = "Move up in filter mode, or enter insert mode" },
 	{ on = "I", run = [ "move first-char", "insert" ],   desc = "Move to the BOL, and enter insert mode" },
 	{ on = "a", run = "insert --append",                 desc = "Enter append mode" },
 	{ on = "A", run = [ "move eol", "insert --append" ], desc = "Move to the EOL, and enter append mode" },
+	{ on = "k", run = "filter_cmd down",                 desc = "Move down in filter mode" },
 	{ on = "v", run = "visual",                          desc = "Enter visual mode" },
 
 	# Filter mgr commands (normal mode only, filter mode only)

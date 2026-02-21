@@ -1,9 +1,11 @@
 use anyhow::Result;
 use yazi_config::popup::InputKind;
 use yazi_macro::{act, succ};
+use yazi_parser::ArrowOpt;
 use yazi_parser::input::FilterCmdOpt;
 use yazi_parser::mgr::{CopyOpt, CreateOpt, PasteOpt, RenameOpt, ToggleOpt, YankOpt};
 use yazi_shared::data::Data;
+use yazi_widgets::input::parser::InsertOpt;
 
 use crate::{Actor, Ctx};
 
@@ -15,11 +17,17 @@ impl Actor for FilterCmd {
 	const NAME: &str = "filter_cmd";
 
 	fn act(cx: &mut Ctx, opt: Self::Options) -> Result<Data> {
-		if cx.input.kind != InputKind::Filter {
-			succ!();
-		}
+		let is_filter = cx.input.kind == InputKind::Filter;
 
 		match &*opt.cmd {
+			// up/down have non-filter fallbacks
+			"up" if is_filter => act!(mgr:arrow, cx, ArrowOpt::from(-1isize)),
+			"up" => act!(insert, cx.input, InsertOpt { append: false }),
+			"down" if is_filter => act!(mgr:arrow, cx, ArrowOpt::from(1isize)),
+			"down" => succ!(),
+
+			// Everything below is filter-only (no-op otherwise)
+			_ if !is_filter => succ!(),
 			"quit" => act!(app:quit, cx),
 			"yank" => act!(mgr:yank, cx, YankOpt { cut: false }),
 			"cut" => act!(mgr:yank, cx, YankOpt { cut: true }),
