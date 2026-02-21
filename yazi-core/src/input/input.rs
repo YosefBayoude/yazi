@@ -1,7 +1,7 @@
 use std::{ops::{Deref, DerefMut}, rc::Rc};
 
 use tokio::sync::mpsc::UnboundedSender;
-use yazi_config::popup::Position;
+use yazi_config::popup::{InputKind, Position};
 use yazi_shared::Ids;
 use yazi_widgets::input::InputError;
 
@@ -12,6 +12,7 @@ pub struct Input {
 	pub visible:  bool,
 	pub title:    String,
 	pub position: Position,
+	pub kind:     InputKind,
 
 	// Typing
 	pub tx:     Option<UnboundedSender<Result<String, InputError>>>,

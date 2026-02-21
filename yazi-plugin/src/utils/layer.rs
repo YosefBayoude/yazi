@@ -59,6 +59,7 @@ impl Utils {
 				position: Pos::new_input(t.raw_get("pos")?)?.into(),
 				realtime,
 				completion: false,
+				..Default::default()
 			}));
 
 			if !realtime {

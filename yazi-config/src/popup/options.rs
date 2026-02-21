@@ -4,6 +4,14 @@ use yazi_shared::{scheme::Encode as EncodeScheme, strand::ToStrand, url::{Url, U
 use super::{Offset, Position};
 use crate::{YAZI, popup::Origin};
 
+#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+pub enum InputKind {
+	#[default]
+	Normal,
+	Find,
+	Filter,
+}
+
 #[derive(Clone, Debug, Default)]
 pub struct InputCfg {
 	pub title:      String,
@@ -13,6 +21,7 @@ pub struct InputCfg {
 	pub position:   Position,
 	pub realtime:   bool,
 	pub completion: bool,
+	pub kind:       InputKind,
 }
 
 #[derive(Clone, Debug, Default)]
@@ -62,6 +71,7 @@ impl InputCfg {
 			title: YAZI.input.filter_title.clone(),
 			position: Position::new(YAZI.input.filter_origin, YAZI.input.filter_offset),
 			realtime: true,
+			kind: InputKind::Filter,
 			..Default::default()
 		}
 	}
@@ -71,6 +81,7 @@ impl InputCfg {
 			title: YAZI.input.find_title[prev as usize].clone(),
 			position: Position::new(YAZI.input.find_origin, YAZI.input.find_offset),
 			realtime: true,
+			kind: InputKind::Find,
 			..Default::default()
 		}
 	}

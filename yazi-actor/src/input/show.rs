@@ -23,6 +23,7 @@ impl Actor for Show {
 		input.visible = true;
 		input.title = opt.cfg.title;
 		input.position = opt.cfg.position;
+		input.kind = opt.cfg.kind;
 
 		// Typing
 		input.tx = Some(opt.tx.clone());
