@@ -116,8 +116,11 @@ pub enum Spark<'a> {
 	InputComplete(yazi_widgets::input::parser::CompleteOpt),
 	InputDelete(yazi_widgets::input::parser::DeleteOpt),
 	InputEscape(yazi_parser::VoidOpt),
+	InputFilterCmd(yazi_parser::input::FilterCmdOpt),
 	InputFilterLeave(yazi_widgets::input::parser::BackspaceOpt),
+	InputFilterLeft(yazi_parser::VoidOpt),
 	InputFilterOpen(yazi_parser::VoidOpt),
+	InputFilterRight(yazi_parser::VoidOpt),
 	InputForward(yazi_widgets::input::parser::ForwardOpt),
 	InputInsert(yazi_widgets::input::parser::InsertOpt),
 	InputKill(yazi_widgets::input::parser::KillOpt),
@@ -296,8 +299,11 @@ impl<'a> IntoLua for Spark<'a> {
 			Self::InputComplete(b) => b.into_lua(lua),
 			Self::InputDelete(b) => b.into_lua(lua),
 			Self::InputEscape(b) => b.into_lua(lua),
+			Self::InputFilterCmd(b) => b.into_lua(lua),
 			Self::InputFilterLeave(b) => b.into_lua(lua),
+			Self::InputFilterLeft(b) => b.into_lua(lua),
 			Self::InputFilterOpen(b) => b.into_lua(lua),
+			Self::InputFilterRight(b) => b.into_lua(lua),
 			Self::InputForward(b) => b.into_lua(lua),
 			Self::InputInsert(b) => b.into_lua(lua),
 			Self::InputKill(b) => b.into_lua(lua),
@@ -357,6 +363,9 @@ try_from_spark!(
 	mgr:suspend,
 	mgr:unyank,
 	mgr:watch,
+	input:filter_left,
+	input:filter_open,
+	input:filter_right,
 	which:dismiss
 );
 
@@ -378,6 +387,7 @@ try_from_spark!(yazi_parser::confirm::CloseOpt, confirm:close);
 try_from_spark!(yazi_parser::confirm::ShowOpt, confirm:show);
 try_from_spark!(yazi_parser::help::ToggleOpt, help:toggle);
 try_from_spark!(yazi_parser::input::CloseOpt, input:close);
+try_from_spark!(yazi_parser::input::FilterCmdOpt, input:filter_cmd);
 try_from_spark!(yazi_parser::input::ShowOpt, input:show);
 try_from_spark!(yazi_parser::mgr::CdOpt, mgr:cd);
 try_from_spark!(yazi_parser::mgr::CloseOpt, mgr:close);

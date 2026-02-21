@@ -227,9 +227,13 @@ keymap = [
 
 [input]
 
+# NOTE: Printable characters are naturally normal-mode-only because router.rs
+# calls input.type() before keymap matching, consuming them in insert mode first.
+# So bindings for printable chars (j, k, q, w, etc.) only fire in normal mode.
+
 keymap = [
 	{ on = "<C-c>",   run = "close",          desc = "Cancel input" },
-	{ on = "<Enter>", run = "close --submit", desc = "Submit input" },
+	{ on = "<Enter>", run = "filter_open",    desc = "Submit input or enter directory in filter mode" },
 	{ on = "<Esc>",   run = "escape",         desc = "Back to normal mode, or cancel input" },
 	{ on = "<C-[>",   run = "escape",         desc = "Back to normal mode, or cancel input" },
 
@@ -239,27 +243,35 @@ keymap = [
 	{ on = "a", run = "insert --append",                 desc = "Enter append mode" },
 	{ on = "A", run = [ "move eol", "insert --append" ], desc = "Move to the EOL, and enter append mode" },
 	{ on = "v", run = "visual",                          desc = "Enter visual mode" },
-	{ on = "r", run = "replace",                         desc = "Replace a single character" },
+
+	# Filter mgr commands (normal mode only, filter mode only)
+	{ on = "q", run = "filter_cmd quit",      desc = "Quit" },
+	{ on = "w", run = "filter_cmd yank",      desc = "Yank" },
+	{ on = "d", run = "filter_cmd cut",       desc = "Yank (cut)" },
+	{ on = "s", run = "filter_cmd toggle",    desc = "Toggle selection" },
+	{ on = "S", run = "filter_cmd unselect",  desc = "Unselect all" },
+	{ on = "c", run = "filter_cmd create",    desc = "Create file/dir" },
+	{ on = "e", run = "filter_cmd paste",     desc = "Paste" },
+	{ on = "r", run = "filter_cmd rename",    desc = "Rename" },
+	{ on = "W", run = "filter_cmd copy_path", desc = "Copy file path" },
 
 	# Selection
 	{ on = "V",     run = [ "move bol", "visual", "move eol" ], desc = "Select from BOL to EOL" },
 	{ on = "<C-A>", run = [ "move eol", "visual", "move bol" ], desc = "Select from EOL to BOL" },
 	{ on = "<C-E>", run = [ "move bol", "visual", "move eol" ], desc = "Select from BOL to EOL" },
 
-	# Character-wise movement
-	{ on = "h",       run = "move -1", desc = "Move back a character" },
-	{ on = "l",       run = "move 1",  desc = "Move forward a character" },
-	{ on = "<Left>",  run = "move -1", desc = "Move back a character" },
-	{ on = "<Right>", run = "move 1",  desc = "Move forward a character" },
-	{ on = "<C-b>",   run = "move -1", desc = "Move back a character" },
-	{ on = "<C-f>",   run = "move 1",  desc = "Move forward a character" },
+	# Character-wise movement (j=left, l=right per ijkl layout)
+	{ on = "h",       run = "move -1",      desc = "Move back a character" },
+	{ on = "j",       run = "filter_left",  desc = "Move left, or leave directory if filter empty" },
+	{ on = "l",       run = "filter_right", desc = "Move right, or enter directory if filter empty" },
+	{ on = "<Left>",  run = "move -1",      desc = "Move back a character" },
+	{ on = "<Right>", run = "move 1",       desc = "Move forward a character" },
+	{ on = "<C-b>",   run = "move -1",      desc = "Move back a character" },
+	{ on = "<C-f>",   run = "move 1",       desc = "Move forward a character" },
 
 	# Word-wise movement
 	{ on = "b",         run = "backward",                    desc = "Move back to the start of the current or previous word" },
 	{ on = "B",         run = "backward --far",              desc = "Move back to the start of the current or previous WORD" },
-	{ on = "w",         run = "forward",                     desc = "Move forward to the start of the next word" },
-	{ on = "W",         run = "forward --far",               desc = "Move forward to the start of the next WORD" },
-	{ on = "e",         run = "forward --end-of-word",       desc = "Move forward to the end of the current or next word" },
 	{ on = "E",         run = "forward --far --end-of-word", desc = "Move forward to the end of the current or next WORD" },
 	{ on = "<A-b>",     run = "backward",                    desc = "Move back to the start of the current or previous word" },
 	{ on = "<A-f>",     run = "forward --end-of-word",       desc = "Move forward to the end of the current or next word" },
@@ -277,7 +289,7 @@ keymap = [
 	{ on = "<End>",  run = "move eol",        desc = "Move to the EOL" },
 
 	# Delete
-	{ on = "<Backspace>", run = "backspace",         desc = "Delete the character before the cursor" },
+	{ on = "<Backspace>", run = "filter_leave",      desc = "Delete char before cursor, or leave directory if filter empty" },
 	{ on = "<Delete>",    run = "backspace --under", desc = "Delete the character under the cursor" },
 	{ on = "<C-h>",       run = "backspace",         desc = "Delete the character before the cursor" },
 	{ on = "<C-d>",       run = "backspace --under", desc = "Delete the character under the cursor" },
