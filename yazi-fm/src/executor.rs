@@ -253,6 +253,8 @@ impl<'a> Executor<'a> {
 
 		on!(escape);
 		on!(show);
+		on!(filter_leave);
+		on!(filter_open);
 		on!(close);
 
 		match mode {

@@ -116,6 +116,8 @@ pub enum Spark<'a> {
 	InputComplete(yazi_widgets::input::parser::CompleteOpt),
 	InputDelete(yazi_widgets::input::parser::DeleteOpt),
 	InputEscape(yazi_parser::VoidOpt),
+	InputFilterLeave(yazi_widgets::input::parser::BackspaceOpt),
+	InputFilterOpen(yazi_parser::VoidOpt),
 	InputForward(yazi_widgets::input::parser::ForwardOpt),
 	InputInsert(yazi_widgets::input::parser::InsertOpt),
 	InputKill(yazi_widgets::input::parser::KillOpt),
@@ -294,6 +296,8 @@ impl<'a> IntoLua for Spark<'a> {
 			Self::InputComplete(b) => b.into_lua(lua),
 			Self::InputDelete(b) => b.into_lua(lua),
 			Self::InputEscape(b) => b.into_lua(lua),
+			Self::InputFilterLeave(b) => b.into_lua(lua),
+			Self::InputFilterOpen(b) => b.into_lua(lua),
 			Self::InputForward(b) => b.into_lua(lua),
 			Self::InputInsert(b) => b.into_lua(lua),
 			Self::InputKill(b) => b.into_lua(lua),
@@ -427,7 +431,7 @@ try_from_spark!(yazi_parser::spot::CopyOpt, spot:copy);
 try_from_spark!(yazi_parser::tasks::ProcessOpenOpt, tasks:process_open);
 try_from_spark!(yazi_parser::tasks::UpdateSucceedOpt, tasks:update_succeed);
 try_from_spark!(yazi_parser::which::ActivateOpt, which:activate);
-try_from_spark!(yazi_widgets::input::parser::BackspaceOpt, input:backspace);
+try_from_spark!(yazi_widgets::input::parser::BackspaceOpt, input:backspace, input:filter_leave);
 try_from_spark!(yazi_widgets::input::parser::BackwardOpt, input:backward);
 try_from_spark!(yazi_widgets::input::parser::CompleteOpt, input:complete);
 try_from_spark!(yazi_widgets::input::parser::DeleteOpt, input:delete);
