@@ -28,10 +28,15 @@ impl Actor for Filter {
 
 			while let Some(result) = rx.next().await {
 				let done = result.is_ok();
-				let (Ok(s) | Err(InputError::Typed(s))) = result else { continue };
+				let (Ok(s) | Err(InputError::Typed(s)) | Err(InputError::Submitted(s))) = result
+				else {
+					continue
+				};
 
 				MgrProxy::filter_do(FilterOpt { query: s.into(), case: opt.case, done });
 			}
+
+			MgrProxy::filter_do(FilterOpt { query: "".into(), case: opt.case, done: true });
 		});
 		succ!();
 	}
