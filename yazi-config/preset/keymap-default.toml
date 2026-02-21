@@ -258,7 +258,10 @@ keymap = [
 	{ on = "c", run = "filter_cmd create",    desc = "Create file/dir" },
 	{ on = "e", run = "filter_cmd paste",     desc = "Paste" },
 	{ on = "r", run = "filter_cmd rename",    desc = "Rename" },
-	{ on = "W", run = "filter_cmd copy_path", desc = "Copy file path" },
+	{ on = [ "W", "p" ], run = "filter_cmd copy_path",     desc = "Copy the file path" },
+	{ on = [ "W", "d" ], run = "filter_cmd copy_dirname",  desc = "Copy the directory path" },
+	{ on = [ "W", "f" ], run = "filter_cmd copy_filename", desc = "Copy the filename" },
+	{ on = [ "W", "n" ], run = "filter_cmd copy_name",     desc = "Copy the filename without extension" },
 
 	# Selection
 	{ on = "V",     run = [ "move bol", "visual", "move eol" ], desc = "Select from BOL to EOL" },

@@ -1,4 +1,5 @@
 use anyhow::Result;
+use yazi_config::popup::InputKind;
 use yazi_macro::{act, render, succ};
 use yazi_parser::VoidOpt;
 use yazi_shared::data::Data;
@@ -19,7 +20,13 @@ impl Actor for Escape {
 
 		let mode = input.snap().mode;
 		match mode {
-			M::Normal if input.snap_mut().op == InputOp::None => act!(input:close, cx),
+			M::Normal if input.snap_mut().op == InputOp::None => {
+				// In filter mode, clear selection first before closing
+				if cx.input.kind == InputKind::Filter && act!(mgr:escape_select, cx)? != false {
+					succ!(render!());
+				}
+				act!(input:close, cx)
+			}
 			M::Insert => act!(cmp:close, cx),
 			M::Normal | M::Replace => Ok(().into()),
 		}?;
